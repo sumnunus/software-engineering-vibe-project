@@ -82,9 +82,11 @@ project-name/
 │   ├── requirements.md
 │   ├── design.md
 │   ├── test_report.md
-│   └── lessons_learned.md
+│   ├── lessons_learned.md
+│   └── github_issues.md
 ├── meeting_logs/
-│   └── 2026-05-22.md
+│   ├── 2026-05-22.md
+│   └── 2026-05-24.md
 ├── screenshots/
 ├── src/
 └── tests/
@@ -97,6 +99,7 @@ project-name/
 - `docs/design.md`: 설계 문서
 - `docs/test_report.md`: 테스트 및 품질 관리 보고서
 - `docs/lessons_learned.md`: 프로세스 적용 교훈과 바이브코딩 효과 분석
+- `docs/github_issues.md`: GitHub issue 등록 계획 및 초안
 - `meeting_logs/`: 주기적 토의 및 진행 기록
 - `screenshots/`: 완성된 소프트웨어 화면 캡처
 - `src/`: 소프트웨어 구현 코드
@@ -116,5 +119,7 @@ project-name/
 
 - 프로젝트 주제 선정 완료
 - 초기 문제 정의 완료
-- README 및 첫 회의록 작성 진행
-- 다음 단계: 요구사항 분석 문서 작성 및 GitHub issue 등록
+- README 및 회의록 작성 진행
+- 요구사항 분석 문서 작성
+- GitHub issue 등록 초안 작성
+- 다음 단계: GitHub issue 실제 등록 및 설계 문서 작성

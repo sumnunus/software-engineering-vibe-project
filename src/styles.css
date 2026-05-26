@@ -1,0 +1,509 @@
+:root {
+  --primary: #3182f6;
+  --primary-soft: #e8f2ff;
+  --gauge: #ffe500;
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --text: #191f28;
+  --muted: #8b95a1;
+  --line: #edf1f5;
+  --success: #00c853;
+  --warning: #ff9500;
+  --danger: #f04452;
+  --shadow: 0 20px 50px rgba(25, 31, 40, 0.08);
+  color: var(--text);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background: var(--background);
+  line-height: 1.5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(49, 130, 246, 0.12), transparent 28rem),
+    var(--background);
+}
+
+button {
+  border: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.app-shell {
+  width: min(100%, 1080px);
+  margin: 0 auto;
+  padding: 28px 20px 56px;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 44px;
+}
+
+.wordmark {
+  color: var(--text);
+  font-size: clamp(1.5rem, 2vw, 2rem);
+  font-weight: 800;
+  letter-spacing: 0;
+  text-decoration: none;
+}
+
+.wordmark strong {
+  color: var(--primary);
+  font-weight: 900;
+}
+
+.icon-button,
+.round-action {
+  display: inline-grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: 0 10px 26px rgba(25, 31, 40, 0.07);
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--primary);
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.hero-panel,
+.panel {
+  border: 1px solid rgba(237, 241, 245, 0.9);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--shadow);
+}
+
+.hero-panel {
+  grid-column: 1 / -1;
+  padding: 30px;
+  background:
+    linear-gradient(135deg, rgba(49, 130, 246, 0.12), rgba(255, 255, 255, 0.92) 42%),
+    var(--surface);
+}
+
+.panel {
+  padding: 24px;
+}
+
+.panel-kicker,
+.panel-header,
+.hero-content,
+.progress-row,
+.todo-item,
+.recommendation,
+.stop-summary,
+.arrival-card,
+.route-badge,
+.text-button,
+.ghost-button {
+  display: flex;
+  align-items: center;
+}
+
+.panel-kicker {
+  gap: 8px;
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.hero-content {
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.hero-content h1 {
+  margin: 0;
+  font-size: clamp(2.4rem, 6vw, 5rem);
+  line-height: 1.04;
+  letter-spacing: 0;
+}
+
+.hero-content p {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 1.03rem;
+}
+
+.ghost-button,
+.text-button {
+  gap: 7px;
+  white-space: nowrap;
+}
+
+.ghost-button {
+  border-radius: 999px;
+  padding: 12px 16px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.departure-expired {
+  background:
+    linear-gradient(135deg, rgba(255, 149, 0, 0.12), rgba(255, 255, 255, 0.92) 42%),
+    var(--surface);
+}
+
+.departure-urgent {
+  background:
+    linear-gradient(135deg, rgba(240, 68, 82, 0.12), rgba(255, 255, 255, 0.92) 42%),
+    var(--surface);
+}
+
+.departure-progress-card {
+  margin-top: 26px;
+  border-radius: 18px;
+  padding: 16px 18px;
+  background: #f4f7fb;
+}
+
+.departure-progress-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.departure-progress-meta strong {
+  color: var(--text);
+  font-size: 1.12rem;
+}
+
+.departure-progress-track {
+  overflow: hidden;
+  height: 10px;
+  margin-top: 14px;
+  border-radius: 999px;
+  background: #dfe6ef;
+}
+
+.departure-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--primary), var(--gauge));
+  transition: width 180ms ease;
+}
+
+.departure-expired .departure-progress-fill,
+.departure-urgent .departure-progress-fill {
+  background: var(--gauge);
+}
+
+.departure-progress-card p {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.panel-header {
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.panel-header h2 {
+  margin: 4px 0 0;
+  font-size: 1.35rem;
+  letter-spacing: 0;
+}
+
+.panel-icon {
+  color: var(--warning);
+}
+
+.progress-row {
+  gap: 12px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.progress-track {
+  overflow: hidden;
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: #eef2f7;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--primary);
+}
+
+.todo-list {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.todo-item {
+  gap: 12px;
+  min-height: 54px;
+  border-radius: 18px;
+  padding: 10px 12px;
+  background: #f9fafc;
+}
+
+.todo-item span {
+  flex: 1;
+  font-weight: 750;
+}
+
+.todo-item.is-done {
+  color: var(--muted);
+}
+
+.todo-item.is-done span {
+  text-decoration: line-through;
+}
+
+.check-button {
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  background: transparent;
+  color: var(--primary);
+}
+
+.todo-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.todo-actions button {
+  display: inline-grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+}
+
+.weather-panel {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(232, 242, 255, 0.72)),
+    var(--surface);
+}
+
+.weather-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.weather-grid div {
+  border-radius: 18px;
+  padding: 16px 12px;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.weather-grid strong,
+.weather-grid span {
+  display: block;
+}
+
+.weather-grid strong {
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.weather-grid span {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.recommendation {
+  gap: 10px;
+  margin-top: 16px;
+  border-radius: 18px;
+  padding: 14px;
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 750;
+}
+
+.recommendation p {
+  margin: 0;
+}
+
+.text-button {
+  background: transparent;
+  color: var(--primary);
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.bus-panel {
+  grid-column: 1 / -1;
+}
+
+.stop-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  gap: 12px;
+  border-radius: 18px;
+  padding: 11px 14px;
+  background: #f4f7fb;
+  color: var(--text);
+}
+
+.stop-inline svg {
+  flex: 0 0 auto;
+  color: var(--primary);
+}
+
+.stop-inline strong {
+  font-size: 0.98rem;
+  white-space: nowrap;
+}
+
+.stop-inline span {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.arrival-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.arrival-card {
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 128px;
+  border-radius: 18px;
+  padding: 14px;
+  background: #f9fafc;
+}
+
+.arrival-card strong,
+.arrival-card span {
+  display: block;
+}
+
+.arrival-card span {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.route-badge {
+  gap: 8px;
+  border-radius: 999px;
+  padding: 9px 12px;
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.arrival-empty {
+  justify-content: center;
+  border: 1px dashed #d8e0ea;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 800;
+  text-align: center;
+}
+
+@media (max-width: 820px) {
+  .app-shell {
+    padding: 22px 14px 40px;
+  }
+
+  .app-header {
+    margin-bottom: 30px;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .arrival-list {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-panel,
+  .panel {
+    border-radius: 22px;
+  }
+
+  .hero-panel {
+    padding: 24px;
+  }
+
+  .hero-content {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .ghost-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .departure-progress-meta {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 2.35rem;
+  }
+
+  .weather-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .arrival-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

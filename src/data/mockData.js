@@ -6,14 +6,14 @@ export const departure = {
 export const todos = [
   {
     id: "todo-1",
-    title: "학생증",
-    completed: true,
+    title: "지갑",
+    completed: false,
     createdAt: "2026-05-26T08:00:00+09:00",
     updatedAt: "2026-05-26T08:00:00+09:00",
   },
   {
     id: "todo-2",
-    title: "노트북 충전기",
+    title: "이어폰",
     completed: false,
     createdAt: "2026-05-26T08:01:00+09:00",
     updatedAt: "2026-05-26T08:01:00+09:00",
@@ -24,6 +24,13 @@ export const todos = [
     completed: false,
     createdAt: "2026-05-26T08:02:00+09:00",
     updatedAt: "2026-05-26T08:02:00+09:00",
+  },
+  {
+    id: "todo-4",
+    title: "노트북 충전기",
+    completed: false,
+    createdAt: "2026-05-26T08:03:00+09:00",
+    updatedAt: "2026-05-26T08:03:00+09:00",
   },
 ];
 

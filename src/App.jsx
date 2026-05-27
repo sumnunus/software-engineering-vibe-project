@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   BusFront,
   CheckCircle2,
@@ -12,7 +12,8 @@ import {
   Shirt,
   Trash2,
 } from "lucide-react";
-import { busArrival, departure, todos, weather } from "./data/mockData.js";
+import { busArrival, departure, weather } from "./data/mockData.js";
+import { useTodos } from "./hooks/useTodos.js";
 import { getOutfitRecommendation } from "./utils/outfitRules.js";
 import { getDepartureStatus } from "./utils/timeUtils.js";
 
@@ -74,7 +75,117 @@ function DepartureTimePanel() {
 }
 
 function TodoPanel() {
-  const completedCount = todos.filter((todo) => todo.completed).length;
+  const {
+    todos,
+    completedCount,
+    errorMessage,
+    isAllCompleted,
+    addTodo,
+    updateTodo,
+    deleteTodo,
+    toggleTodo,
+    clearError,
+  } = useTodos();
+  const [isAdding, setIsAdding] = useState(false);
+  const [newTodoTitle, setNewTodoTitle] = useState("");
+  const [editingTodoId, setEditingTodoId] = useState(null);
+  const [editingTitle, setEditingTitle] = useState("");
+  const [pendingDeleteId, setPendingDeleteId] = useState(null);
+  const addFormRef = useRef(null);
+  const addButtonRef = useRef(null);
+  const deletePopoverRef = useRef(null);
+  const newTodoInputRef = useRef(null);
+
+  useEffect(() => {
+    if (!isAdding) {
+      return undefined;
+    }
+
+    function handlePointerDown(event) {
+      const target = event.target;
+      const clickedInsideForm = addFormRef.current?.contains(target);
+      const clickedAddButton = addButtonRef.current?.contains(target);
+
+      if (!clickedInsideForm && !clickedAddButton) {
+        setIsAdding(false);
+        setNewTodoTitle("");
+        clearError();
+      }
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [clearError, isAdding]);
+
+  useEffect(() => {
+    if (!pendingDeleteId) {
+      return undefined;
+    }
+
+    function handlePointerDown(event) {
+      if (!deletePopoverRef.current?.contains(event.target)) {
+        setPendingDeleteId(null);
+      }
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        handleDelete(pendingDeleteId);
+      }
+
+      if (event.key === "Escape") {
+        setPendingDeleteId(null);
+      }
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [pendingDeleteId]);
+
+  function handleAddSubmit(event) {
+    event.preventDefault();
+
+    if (addTodo(newTodoTitle)) {
+      setNewTodoTitle("");
+      setIsAdding(true);
+      requestAnimationFrame(() => {
+        newTodoInputRef.current?.focus();
+      });
+    }
+  }
+
+  function startEditing(todo) {
+    clearError();
+    setIsAdding(false);
+    setPendingDeleteId(null);
+    setEditingTodoId(todo.id);
+    setEditingTitle(todo.title);
+  }
+
+  function handleEditSubmit(event, todoId) {
+    event.preventDefault();
+
+    if (updateTodo(todoId, editingTitle)) {
+      setEditingTodoId(null);
+      setEditingTitle("");
+    }
+  }
+
+  function handleDelete(todoId) {
+    deleteTodo(todoId);
+    setPendingDeleteId(null);
+  }
+
+  const progressWidth = todos.length > 0 ? (completedCount / todos.length) * 100 : 0;
 
   return (
     <section className="panel" aria-labelledby="todo-title">
@@ -83,7 +194,17 @@ function TodoPanel() {
           <p className="eyebrow">Checklist</p>
           <h2 id="todo-title">챙길 준비물</h2>
         </div>
-        <button className="round-action" aria-label="준비물 추가">
+        <button
+          ref={addButtonRef}
+          className="round-action"
+          aria-label="준비물 추가"
+          onClick={() => {
+            clearError();
+            setPendingDeleteId(null);
+            setIsAdding((current) => !current);
+          }}
+          type="button"
+        >
           <Plus size={20} />
         </button>
       </div>
@@ -95,26 +216,98 @@ function TodoPanel() {
         <div className="progress-track" aria-hidden="true">
           <div
             className="progress-fill"
-            style={{ width: `${(completedCount / todos.length) * 100}%` }}
+            style={{ width: `${progressWidth}%` }}
           />
         </div>
       </div>
 
+      {isAllCompleted ? (
+        <div className="todo-complete-banner">
+          <CheckCircle2 size={18} />
+          <span>준비물 체크 완료!</span>
+        </div>
+      ) : null}
+
+      {isAdding ? (
+        <form className="todo-form" onSubmit={handleAddSubmit} ref={addFormRef}>
+          <input
+            aria-label="새 준비물"
+            autoFocus
+            ref={newTodoInputRef}
+            onChange={(event) => setNewTodoTitle(event.target.value)}
+            placeholder="챙길 준비물을 입력해 주세요"
+            value={newTodoTitle}
+          />
+          <button type="submit">추가</button>
+        </form>
+      ) : null}
+
+      {errorMessage ? <p className="form-message">{errorMessage}</p> : null}
+
       <ul className="todo-list">
         {todos.map((todo) => (
           <li className={todo.completed ? "todo-item is-done" : "todo-item"} key={todo.id}>
-            <button className="check-button" aria-label={`${todo.title} 완료 상태`}>
+            <button
+              className="check-button"
+              aria-label={`${todo.title} 완료 상태 변경`}
+              onClick={() => toggleTodo(todo.id)}
+              type="button"
+            >
               <CheckCircle2 size={22} />
             </button>
-            <span>{todo.title}</span>
-            <div className="todo-actions">
-              <button aria-label={`${todo.title} 수정`}>
-                <Edit3 size={16} />
-              </button>
-              <button aria-label={`${todo.title} 삭제`}>
-                <Trash2 size={16} />
-              </button>
-            </div>
+
+            {editingTodoId === todo.id ? (
+              <form className="todo-edit-form" onSubmit={(event) => handleEditSubmit(event, todo.id)}>
+                <input
+                  aria-label={`${todo.title} 수정`}
+                  autoFocus
+                  onChange={(event) => setEditingTitle(event.target.value)}
+                  value={editingTitle}
+                />
+                <button type="submit">저장</button>
+              </form>
+            ) : (
+              <>
+                <span>{todo.title}</span>
+                <div className="todo-actions">
+                  <button aria-label={`${todo.title} 수정`} onClick={() => startEditing(todo)} type="button">
+                    <Edit3 size={16} />
+                  </button>
+                  <button
+                    aria-label={`${todo.title} 삭제 확인 열기`}
+                    onClick={() => {
+                      clearError();
+                      setPendingDeleteId((currentId) => (currentId === todo.id ? null : todo.id));
+                    }}
+                    type="button"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                  {pendingDeleteId === todo.id ? (
+                    <div className="delete-confirm" ref={deletePopoverRef}>
+                      <p>삭제할까요?</p>
+                      <div className="delete-confirm-actions">
+                        <button
+                          className="delete-cancel-button"
+                          onClick={() => setPendingDeleteId(null)}
+                          type="button"
+                        >
+                          취소
+                        </button>
+                        <button
+                          className="delete-confirm-button"
+                          onClick={() => handleDelete(todo.id)}
+                          type="button"
+                        >
+                          <Trash2 size={13} />
+                          삭제하기
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              </>
+            )}
           </li>
         ))}
       </ul>

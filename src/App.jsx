@@ -12,8 +12,10 @@ import {
   Shirt,
   Trash2,
 } from "lucide-react";
-import { busArrival, departure, weather } from "./data/mockData.js";
+import { busArrival, departure } from "./data/mockData.js";
 import { useTodos } from "./hooks/useTodos.js";
+import { getCurrentLocation } from "./services/locationService.js";
+import { fetchWeather } from "./services/weatherService.js";
 import { getOutfitRecommendation } from "./utils/outfitRules.js";
 import { getDepartureStatus } from "./utils/timeUtils.js";
 
@@ -316,7 +318,34 @@ function TodoPanel() {
 }
 
 function WeatherPanel() {
-  const recommendation = getOutfitRecommendation(weather.temperature);
+  const [weatherData, setWeatherData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadWeather() {
+      setIsLoading(true);
+      const location = await getCurrentLocation();
+      const nextWeather = await fetchWeather(location);
+
+      if (isMounted) {
+        setWeatherData(nextWeather);
+        setIsLoading(false);
+      }
+    }
+
+    loadWeather();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const recommendation = weatherData
+    ? getOutfitRecommendation(weatherData.temperature)
+    : "";
+  const updatedAt = weatherData ? formatWeatherTime(weatherData.fetchedAt) : "";
 
   return (
     <section className="panel weather-panel" aria-labelledby="weather-title">
@@ -328,27 +357,69 @@ function WeatherPanel() {
         <CloudSun className="panel-icon" size={28} />
       </div>
 
-      <div className="weather-grid">
-        <div>
-          <strong>{weather.temperature}°</strong>
-          <span>{weather.condition}</span>
+      {isLoading ? (
+        <div className="weather-loading" role="status">
+          <span aria-hidden="true">☀️</span>
+          <p>날씨를 불러오는 중이에요.</p>
         </div>
-        <div>
-          <strong>{weather.apparentTemperature}°</strong>
-          <span>체감</span>
-        </div>
-        <div>
-          <strong>{weather.precipitation}%</strong>
-          <span>강수</span>
-        </div>
-      </div>
+      ) : (
+        <>
+          <div className="weather-summary">
+            <span className="weather-symbol" aria-hidden="true">
+              <span className="weather-symbol-icon">{weatherData.icon}</span>
+            </span>
+            <div>
+              <strong>{weatherData.temperature}°</strong>
+              <span>{weatherData.condition}</span>
+            </div>
+          </div>
 
-      <div className="recommendation">
-        <Shirt size={20} />
-        <p>{recommendation}</p>
-      </div>
+          <div className="weather-grid">
+            <div>
+              <strong>{weatherData.temperatureMin}°</strong>
+              <span>최저</span>
+            </div>
+            <div>
+              <strong>{weatherData.temperatureMax}°</strong>
+              <span>최고</span>
+            </div>
+            <div>
+              <strong>{weatherData.apparentTemperature}°</strong>
+              <span>체감</span>
+            </div>
+            <div>
+              <strong>
+                {weatherData.precipitation}
+                {weatherData.precipitationUnit}
+              </strong>
+              <span>강수</span>
+            </div>
+          </div>
+
+          <div className="weather-meta" aria-label="날씨 데이터 정보">
+            <span>{weatherData.locationName} 기준</span>
+            <span>{updatedAt} 업데이트</span>
+            {weatherData.isTemporary ? <strong>임시 데이터</strong> : null}
+          </div>
+
+          <div className="recommendation">
+            <Shirt size={20} />
+            <div>
+              <span>현재 온도 기준</span>
+              <p>{recommendation}</p>
+            </div>
+          </div>
+        </>
+      )}
     </section>
   );
+}
+
+function formatWeatherTime(value) {
+  return new Date(value).toLocaleTimeString("ko-KR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 function BusPanel() {

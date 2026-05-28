@@ -441,13 +441,13 @@ input {
 
 .weather-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
 }
 
 .weather-grid div {
   border-radius: 18px;
-  padding: 16px 12px;
+  padding: 15px 12px;
   background: rgba(255, 255, 255, 0.8);
 }
 
@@ -457,7 +457,7 @@ input {
 }
 
 .weather-grid strong {
-  font-size: 1.7rem;
+  font-size: 1.45rem;
   line-height: 1;
 }
 
@@ -466,6 +466,87 @@ input {
   color: var(--muted);
   font-size: 0.88rem;
   font-weight: 700;
+}
+
+.weather-loading,
+.weather-summary,
+.weather-meta {
+  display: flex;
+  align-items: center;
+}
+
+.weather-loading {
+  justify-content: center;
+  gap: 10px;
+  min-height: 190px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.76);
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.weather-loading span {
+  font-size: 1.8rem;
+}
+
+.weather-loading p {
+  margin: 0;
+}
+
+.weather-summary {
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.weather-symbol {
+  display: inline-grid;
+  width: 54px;
+  height: 54px;
+  place-items: center;
+  border-radius: 18px;
+  background: #fff9db;
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.weather-symbol-icon {
+  transform: translateX(1px);
+}
+
+.weather-summary strong,
+.weather-summary span {
+  display: block;
+}
+
+.weather-summary strong {
+  font-size: 2.15rem;
+  line-height: 1;
+}
+
+.weather-summary span {
+  margin-top: 4px;
+  color: var(--muted);
+  font-weight: 750;
+}
+
+.weather-meta {
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.weather-meta span,
+.weather-meta strong {
+  border-radius: 999px;
+  padding: 6px 9px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.weather-meta strong {
+  color: var(--primary);
 }
 
 .recommendation {
@@ -479,7 +560,14 @@ input {
 }
 
 .recommendation p {
-  margin: 0;
+  margin: 2px 0 0;
+}
+
+.recommendation span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 850;
 }
 
 .text-button {
@@ -586,6 +674,10 @@ input {
 
   .arrival-list {
     grid-template-columns: 1fr;
+  }
+
+  .weather-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .hero-panel,

@@ -35,14 +35,19 @@ export const todos = [
 ];
 
 export const weather = {
-  locationName: "Seoul",
+  locationName: "홍대입구",
   temperature: 21,
+  temperatureMin: 18,
+  temperatureMax: 24,
   apparentTemperature: 22,
   condition: "맑음",
   weatherCode: 0,
-  precipitation: 10,
+  precipitation: 0,
+  precipitationUnit: "mm",
   fetchedAt: "2026-05-26T08:00:00+09:00",
   source: "mock",
+  sourceLabel: "임시 데이터",
+  icon: "☀️",
 };
 
 export const busArrival = {

@@ -19,10 +19,18 @@ import { busStops, departure } from "./data/mockData.js";
 import { useTodos } from "./hooks/useTodos.js";
 import { fetchBusArrivals, searchBusStops } from "./services/busService.js";
 import { getCurrentLocation } from "./services/locationService.js";
-import { loadBusStop, saveBusStop } from "./services/storageService.js";
+import {
+  loadBusStop,
+  loadDeparture,
+  saveBusStop,
+  saveDeparture,
+} from "./services/storageService.js";
 import { fetchWeather } from "./services/weatherService.js";
 import { getOutfitRecommendation } from "./utils/outfitRules.js";
 import { getDepartureStatus } from "./utils/timeUtils.js";
+
+const HOURS = Array.from({ length: 24 }, (_, hour) => String(hour).padStart(2, "0"));
+const MINUTES = Array.from({ length: 60 }, (_, minute) => String(minute).padStart(2, "0"));
 
 function Header() {
   return (
@@ -39,7 +47,50 @@ function Header() {
 }
 
 function DepartureTimePanel() {
-  const departureStatus = getDepartureStatus(departure.targetTime);
+  const [departureData, setDepartureData] = useState(() => loadDeparture(departure));
+  const [currentTime, setCurrentTime] = useState(() => new Date());
+  const [isEditing, setIsEditing] = useState(false);
+  const [draftTime, setDraftTime] = useState(departureData.targetTime);
+  const [draftHour, draftMinute] = draftTime.split(":");
+  const departureStatus = getDepartureStatus(departureData.targetTime, currentTime);
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, []);
+
+  function handleEditStart() {
+    setDraftTime(departureData.targetTime);
+    setIsEditing(true);
+  }
+
+  function handleEditCancel() {
+    setDraftTime(departureData.targetTime);
+    setIsEditing(false);
+  }
+
+  function handleEditSubmit(event) {
+    event.preventDefault();
+
+    if (!draftTime) {
+      return;
+    }
+
+    const nextDeparture = {
+      targetTime: draftTime,
+      updatedAt: new Date().toISOString(),
+    };
+
+    saveDeparture(nextDeparture);
+    setDepartureData(nextDeparture);
+    setCurrentTime(new Date());
+    setIsEditing(false);
+  }
 
   return (
     <section
@@ -55,15 +106,61 @@ function DepartureTimePanel() {
           <h1 id="departure-title">{departureStatus.primary}</h1>
           <p>{departureStatus.secondary}</p>
         </div>
-        <button className="ghost-button">
-          <Edit3 size={16} />
-          수정
-        </button>
+        {isEditing ? (
+          <form className="departure-edit-form" onSubmit={handleEditSubmit}>
+            <span className="departure-edit-label">외출 시각</span>
+            <div className="departure-time-selectors">
+              <label>
+                <span>시</span>
+                <select
+                  autoFocus
+                  aria-label="외출 시각 시"
+                  onChange={(event) => setDraftTime(`${event.target.value}:${draftMinute}`)}
+                  value={draftHour}
+                >
+                  {HOURS.map((hour) => (
+                    <option key={hour} value={hour}>
+                      {hour}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <strong>:</strong>
+              <label>
+                <span>분</span>
+                <select
+                  aria-label="외출 시각 분"
+                  onChange={(event) => setDraftTime(`${draftHour}:${event.target.value}`)}
+                  value={draftMinute}
+                >
+                  {MINUTES.map((minute) => (
+                    <option key={minute} value={minute}>
+                      {minute}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            <div>
+              <button className="departure-cancel-button" onClick={handleEditCancel} type="button">
+                취소
+              </button>
+              <button className="departure-save-button" type="submit">
+                저장
+              </button>
+            </div>
+          </form>
+        ) : (
+          <button className="ghost-button" onClick={handleEditStart} type="button">
+            <Edit3 size={16} />
+            수정
+          </button>
+        )}
       </div>
       <div className="departure-progress-card">
         <div className="departure-progress-meta">
           <span>준비 게이지</span>
-          <strong>외출 시각 {departure.targetTime}</strong>
+          <strong>외출 시각 {departureData.targetTime}</strong>
         </div>
         <div className="departure-progress-track" aria-hidden="true">
           <div

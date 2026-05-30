@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   BusFront,
   CheckCircle2,
@@ -9,12 +9,17 @@ import {
   MapPin,
   MoreHorizontal,
   Plus,
+  RefreshCw,
+  Search,
   Shirt,
   Trash2,
+  X,
 } from "lucide-react";
-import { busArrival, departure } from "./data/mockData.js";
+import { busStops, departure } from "./data/mockData.js";
 import { useTodos } from "./hooks/useTodos.js";
+import { fetchBusArrivals, searchBusStops } from "./services/busService.js";
 import { getCurrentLocation } from "./services/locationService.js";
+import { loadBusStop, saveBusStop } from "./services/storageService.js";
 import { fetchWeather } from "./services/weatherService.js";
 import { getOutfitRecommendation } from "./utils/outfitRules.js";
 import { getDepartureStatus } from "./utils/timeUtils.js";
@@ -423,7 +428,57 @@ function formatWeatherTime(value) {
 }
 
 function BusPanel() {
-  const arrivalSlots = Array.from({ length: 4 }, (_, index) => busArrival.arrivals[index]);
+  const [selectedStop, setSelectedStop] = useState(() => loadBusStop(busStops[0]));
+  const [busData, setBusData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSelectorOpen, setIsSelectorOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
+  const [searchedWithFallback, setSearchedWithFallback] = useState(false);
+
+  const loadArrivals = useCallback(async () => {
+    setIsLoading(true);
+    const nextBusData = await fetchBusArrivals(selectedStop);
+    setBusData(nextBusData);
+    setIsLoading(false);
+  }, [selectedStop]);
+
+  useEffect(() => {
+    loadArrivals();
+    const intervalId = window.setInterval(loadArrivals, 1000 * 30);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [loadArrivals]);
+
+  async function handleSearchSubmit(event) {
+    event.preventDefault();
+    setIsSearching(true);
+    const result = await searchBusStops(searchTerm);
+    setSearchResults(result.stops);
+    setHasSearched(true);
+    setSearchedWithFallback(result.isTemporary);
+    setIsSearching(false);
+  }
+
+  function handleSelectStop(stop) {
+    saveBusStop(stop);
+    setSelectedStop(stop);
+    setIsSelectorOpen(false);
+    setSearchTerm("");
+    setSearchResults([]);
+    setHasSearched(false);
+    setSearchedWithFallback(false);
+  }
+
+  const arrivalSlots = Array.from({ length: 4 }, (_, index) => busData?.arrivals[index]);
+  const duplicatedStopNames = searchResults.reduce((counts, stop) => {
+    counts[stop.stopName] = (counts[stop.stopName] ?? 0) + 1;
+    return counts;
+  }, {});
 
   return (
     <section className="panel bus-panel" aria-labelledby="bus-title">
@@ -434,14 +489,73 @@ function BusPanel() {
         </div>
         <div className="stop-inline">
           <MapPin size={17} />
-          <strong>{busArrival.stopName}</strong>
-          <span>{busArrival.direction}</span>
+          <strong>{busData?.stopName ?? selectedStop.stopName}</strong>
+          <span>{busData?.direction ?? selectedStop.direction}</span>
         </div>
-        <button className="text-button">
-          변경
-          <ChevronRight size={16} />
-        </button>
+        <div className="bus-actions">
+          <button
+            className={isLoading ? "refresh-button is-loading" : "refresh-button"}
+            aria-label="버스 도착 정보 새로고침"
+            onClick={loadArrivals}
+            type="button"
+          >
+            <RefreshCw size={17} />
+          </button>
+          <button
+            className="text-button"
+            onClick={() => setIsSelectorOpen((current) => !current)}
+            type="button"
+          >
+            변경
+            {isSelectorOpen ? <X size={16} /> : <ChevronRight size={16} />}
+          </button>
+        </div>
       </div>
+
+      {isSelectorOpen ? (
+        <div className="bus-selector">
+          <form className="bus-search-form" onSubmit={handleSearchSubmit}>
+            <Search size={18} />
+            <input
+              aria-label="관심 정류장 검색"
+              autoFocus
+              onChange={(event) => setSearchTerm(event.target.value)}
+              placeholder="정류장 이름을 입력해 주세요"
+              value={searchTerm}
+            />
+            <button disabled={isSearching} type="submit">
+              {isSearching ? "검색 중" : "검색"}
+            </button>
+          </form>
+
+          {searchedWithFallback ? (
+            <p className="bus-selector-message">
+              API 연결을 확인할 수 없어 예시 정류장을 보여드려요.
+            </p>
+          ) : null}
+
+          {searchResults.length > 0 ? (
+            <ul className="bus-stop-results">
+              {searchResults.map((stop) => (
+                <li key={`${stop.stopId}-${stop.arsId}`}>
+                  <button onClick={() => handleSelectStop(stop)} type="button">
+                    <MapPin size={16} />
+                    <span>
+                      <strong>{stop.stopName}</strong>
+                      {duplicatedStopNames[stop.stopName] > 1 ? (
+                        <small>정류소 번호 {stop.arsId}</small>
+                      ) : null}
+                    </span>
+                    <ChevronRight size={16} />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : hasSearched ? (
+            <p className="bus-selector-message">검색 결과가 없어요.</p>
+          ) : null}
+        </div>
+      ) : null}
 
       <div className="arrival-list" aria-label="버스 도착 정보">
         {arrivalSlots.map((arrival, index) =>
@@ -462,6 +576,12 @@ function BusPanel() {
             </article>
           )
         )}
+      </div>
+
+      <div className="bus-meta">
+        <span>30초마다 자동 갱신</span>
+        {busData?.fetchedAt ? <span>{formatWeatherTime(busData.fetchedAt)} 업데이트</span> : null}
+        {busData?.isTemporary ? <strong>임시 데이터</strong> : null}
       </div>
     </section>
   );

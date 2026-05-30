@@ -52,6 +52,7 @@ export const weather = {
 
 export const busArrival = {
   stopId: "mock-stop-1",
+  arsId: "mock-14001",
   stopName: "홍대입구역",
   direction: "학교 방면",
   arrivals: [
@@ -79,4 +80,27 @@ export const busArrival = {
   ],
   fetchedAt: "2026-05-26T08:00:00+09:00",
   source: "mock",
+  sourceLabel: "임시 데이터",
+  isTemporary: true,
 };
+
+export const busStops = [
+  {
+    stopId: "mock-stop-1",
+    arsId: "mock-14001",
+    stopName: "홍대입구역",
+    direction: "학교 방면",
+  },
+  {
+    stopId: "mock-stop-2",
+    arsId: "mock-02005",
+    stopName: "서울역버스환승센터",
+    direction: "숭례문 방면",
+  },
+  {
+    stopId: "mock-stop-3",
+    arsId: "mock-12121",
+    stopName: "불광역3.6호선",
+    direction: "신설동 방면",
+  },
+];

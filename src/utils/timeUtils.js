@@ -1,13 +1,12 @@
 const PREPARATION_WINDOW_MINUTES = 60;
 
-export function getDepartureStatus(targetTime) {
+export function getDepartureStatus(targetTime, currentTime = new Date()) {
   const [targetHour, targetMinute] = targetTime.split(":").map(Number);
-  const now = new Date();
-  const target = new Date();
+  const target = new Date(currentTime);
 
   target.setHours(targetHour, targetMinute, 0, 0);
 
-  const diffMinutes = Math.ceil((target.getTime() - now.getTime()) / 60000);
+  const diffMinutes = Math.ceil((target.getTime() - currentTime.getTime()) / 60000);
   const elapsedPreparationMinutes = PREPARATION_WINDOW_MINUTES - diffMinutes;
   const progress = Math.min(
     100,

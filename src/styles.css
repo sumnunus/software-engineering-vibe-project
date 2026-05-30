@@ -169,18 +169,6 @@ input {
   font-weight: 800;
 }
 
-.departure-expired {
-  background:
-    linear-gradient(135deg, rgba(255, 149, 0, 0.12), rgba(255, 255, 255, 0.92) 42%),
-    var(--surface);
-}
-
-.departure-urgent {
-  background:
-    linear-gradient(135deg, rgba(240, 68, 82, 0.12), rgba(255, 255, 255, 0.92) 42%),
-    var(--surface);
-}
-
 .departure-progress-card {
   margin-top: 26px;
   border-radius: 18px;
@@ -213,13 +201,18 @@ input {
 .departure-progress-fill {
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--primary), var(--gauge));
+  background: linear-gradient(90deg, #fff172, var(--gauge));
   transition: width 180ms ease;
 }
 
 .departure-expired .departure-progress-fill,
 .departure-urgent .departure-progress-fill {
-  background: var(--gauge);
+  background: var(--danger);
+}
+
+.departure-urgent .departure-progress-card p,
+.departure-expired .departure-progress-card p {
+  color: var(--danger);
 }
 
 .departure-progress-card p {
@@ -227,6 +220,78 @@ input {
   color: var(--muted);
   font-size: 0.92rem;
   font-weight: 700;
+}
+
+.departure-edit-form {
+  display: grid;
+  min-width: 204px;
+  gap: 8px;
+  border-radius: 18px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.84);
+}
+
+.departure-edit-label,
+.departure-time-selectors label span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.departure-time-selectors {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.departure-time-selectors label {
+  display: grid;
+  flex: 1;
+  gap: 4px;
+}
+
+.departure-time-selectors select {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  padding: 9px 10px;
+  background: #f4f7fb;
+  color: var(--text);
+  font: inherit;
+  font-weight: 800;
+  outline: 2px solid transparent;
+}
+
+.departure-time-selectors strong {
+  padding-bottom: 8px;
+}
+
+.departure-time-selectors select:focus {
+  outline-color: rgba(49, 130, 246, 0.22);
+}
+
+.departure-edit-form > div:last-child {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.departure-cancel-button,
+.departure-save-button {
+  border-radius: 999px;
+  padding: 8px 11px;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.departure-cancel-button {
+  background: #f4f7fb;
+  color: var(--muted);
+}
+
+.departure-save-button {
+  background: var(--primary);
+  color: #ffffff;
 }
 
 .panel-header {
@@ -836,6 +901,10 @@ input {
   .ghost-button {
     width: 100%;
     justify-content: center;
+  }
+
+  .departure-edit-form {
+    width: 100%;
   }
 
   .departure-progress-meta {

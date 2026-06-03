@@ -1,16 +1,25 @@
 const SEOUL_BUS_API_BASE = "http://ws.bus.go.kr/api/rest/stationinfo";
 
-function getEndpointPath(path) {
+function getEndpointPath(path, requestUrl, host) {
   if (Array.isArray(path)) {
     return path.join("/");
   }
 
-  return path;
+  if (path) {
+    return path;
+  }
+
+  const url = new URL(requestUrl, `https://${host}`);
+  return url.pathname.replace(/^\/api\/seoul-bus\/?/, "");
 }
 
 export default async function handler(request, response) {
   const apiKey = process.env.SEOUL_BUS_API_KEY;
-  const endpointPath = getEndpointPath(request.query.path);
+  const endpointPath = getEndpointPath(
+    request.query.path,
+    request.url,
+    request.headers.host
+  );
 
   if (!apiKey) {
     response.status(500).json({

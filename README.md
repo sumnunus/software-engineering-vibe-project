@@ -133,6 +133,8 @@ SEOUL_BUS_API_KEY=공공데이터포털에서_발급받은_일반_인증키
 
 배포는 Vercel을 기준으로 진행한다. 프론트엔드는 Vite 정적 빌드로 배포하고, 서울 버스 API는 `api/seoul-bus/[...path].js` 서버리스 함수를 통해 중계한다. 이를 통해 브라우저 코드에 API 인증키가 노출되지 않도록 한다.
 
+배포 URL: <https://software-engineering-vibe-project.vercel.app>
+
 Vercel 프로젝트 환경 변수에는 다음 값을 등록한다.
 
 ```text
@@ -164,4 +166,5 @@ SEOUL_BUS_API_KEY
 - 서울 버스 API 실제 연동 검증 완료
 - 외출 시각 및 남은 시간 표시 기능 구현
 - 기능별 테스트 케이스 및 테스트 보고서 작성
-- 다음 단계: Vercel 배포 환경 구성 및 배포 검증
+- Vercel 배포 환경 구성 및 배포 검증
+- 다음 단계: lessons learned 정리 및 최종 보고서 작성

@@ -78,6 +78,8 @@
 ```text
 project-name/
 ├── README.md
+├── api/
+│   └── seoul-bus/
 ├── docs/
 │   ├── requirements.md
 │   ├── design.md
@@ -106,10 +108,36 @@ project-name/
 - `docs/test_report.md`: 테스트 및 품질 관리 보고서
 - `docs/lessons_learned.md`: 프로세스 적용 교훈과 바이브코딩 효과 분석
 - `docs/github_issues.md`: GitHub issue 등록 계획 및 초안
+- `api/`: 배포 환경에서 외부 API 인증키를 보호하기 위한 서버리스 API 중계 함수
 - `meeting_logs/`: 주기적 토의 및 진행 기록
 - `screenshots/`: 완성된 소프트웨어 화면 캡처
 - `src/`: 소프트웨어 구현 코드
 - `tests/`: 테스트 코드 또는 테스트 자료
+
+## 실행 및 배포
+
+### 로컬 실행
+
+```bash
+npm install
+npm run dev
+```
+
+서울 버스 API를 로컬에서 확인하려면 `.env.local` 파일에 다음 환경 변수를 설정한다.
+
+```text
+SEOUL_BUS_API_KEY=공공데이터포털에서_발급받은_일반_인증키
+```
+
+### 배포 방식
+
+배포는 Vercel을 기준으로 진행한다. 프론트엔드는 Vite 정적 빌드로 배포하고, 서울 버스 API는 `api/seoul-bus/[...path].js` 서버리스 함수를 통해 중계한다. 이를 통해 브라우저 코드에 API 인증키가 노출되지 않도록 한다.
+
+Vercel 프로젝트 환경 변수에는 다음 값을 등록한다.
+
+```text
+SEOUL_BUS_API_KEY
+```
 
 ## 진행 기록 및 증빙 방식
 
@@ -135,4 +163,5 @@ project-name/
 - 버스 도착 정보 표시 기능 구현
 - 서울 버스 API 실제 연동 검증 완료
 - 외출 시각 및 남은 시간 표시 기능 구현
-- 다음 단계: 기능별 테스트 케이스 및 테스트 보고서 작성
+- 기능별 테스트 케이스 및 테스트 보고서 작성
+- 다음 단계: Vercel 배포 환경 구성 및 배포 검증

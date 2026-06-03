@@ -939,3 +939,433 @@ input {
     width: 100%;
   }
 }
+
+@media (max-width: 560px) {
+  body {
+    min-height: 100svh;
+  }
+
+  .app-shell {
+    width: 100%;
+    min-height: 100svh;
+    padding: 10px 8px 14px;
+  }
+
+  .app-header {
+    margin-bottom: 10px;
+  }
+
+  .wordmark {
+    font-size: 1.26rem;
+  }
+
+  .icon-button,
+  .round-action {
+    width: 34px;
+    height: 34px;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .hero-panel,
+  .panel {
+    border-radius: 16px;
+    box-shadow: 0 12px 28px rgba(25, 31, 40, 0.07);
+  }
+
+  .hero-panel {
+    grid-column: 1 / -1;
+    padding: 12px;
+  }
+
+  .panel {
+    padding: 12px;
+  }
+
+  .panel-kicker {
+    gap: 5px;
+    font-size: 0.76rem;
+  }
+
+  .panel-kicker svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .hero-content {
+    align-items: center;
+    flex-direction: row;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .hero-content h1 {
+    font-size: clamp(1.72rem, 11vw, 2.68rem);
+    line-height: 1.02;
+  }
+
+  .hero-content p {
+    margin-top: 4px;
+    font-size: 0.78rem;
+  }
+
+  .ghost-button {
+    width: auto;
+    flex: 0 0 auto;
+    padding: 8px 11px;
+    font-size: 0.78rem;
+  }
+
+  .departure-progress-card {
+    margin-top: 10px;
+    border-radius: 12px;
+    padding: 9px 10px;
+  }
+
+  .departure-progress-meta {
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.76rem;
+  }
+
+  .departure-progress-meta strong {
+    font-size: 0.8rem;
+  }
+
+  .departure-progress-track {
+    height: 6px;
+    margin-top: 7px;
+  }
+
+  .departure-progress-card p {
+    margin-top: 5px;
+    font-size: 0.68rem;
+  }
+
+  .departure-edit-form {
+    width: auto;
+    min-width: 132px;
+    padding: 8px;
+    gap: 5px;
+  }
+
+  .departure-time-selectors select {
+    border-radius: 9px;
+    padding: 6px 4px;
+    font-size: 0.76rem;
+  }
+
+  .departure-cancel-button,
+  .departure-save-button {
+    padding: 6px 8px;
+    font-size: 0.72rem;
+  }
+
+  .panel-header {
+    align-items: center;
+    flex-direction: row;
+    gap: 8px;
+    margin-bottom: 9px;
+  }
+
+  .eyebrow {
+    font-size: 0.68rem;
+  }
+
+  .panel-header h2 {
+    margin-top: 1px;
+    font-size: 0.96rem;
+  }
+
+  .panel-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .progress-row {
+    gap: 7px;
+    font-size: 0.72rem;
+  }
+
+  .progress-track {
+    height: 5px;
+  }
+
+  .todo-list {
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .todo-item {
+    gap: 7px;
+    min-height: 35px;
+    border-radius: 12px;
+    padding: 6px 7px;
+    font-size: 0.76rem;
+  }
+
+  .todo-item span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .check-button svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .todo-actions {
+    gap: 1px;
+  }
+
+  .todo-actions > button {
+    width: 24px;
+    height: 24px;
+  }
+
+  .todo-actions svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .todo-complete-banner,
+  .todo-form {
+    margin-top: 8px;
+    border-radius: 12px;
+    padding: 8px;
+    font-size: 0.74rem;
+  }
+
+  .todo-form,
+  .todo-edit-form {
+    flex-direction: row;
+  }
+
+  .todo-form input,
+  .todo-edit-form input {
+    border-radius: 10px;
+    padding: 8px;
+    font-size: 0.78rem;
+  }
+
+  .todo-form button,
+  .todo-edit-form button {
+    width: auto;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 0.76rem;
+  }
+
+  .weather-summary {
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .weather-symbol {
+    width: 38px;
+    height: 38px;
+    border-radius: 13px;
+    font-size: 1.35rem;
+  }
+
+  .weather-summary strong {
+    font-size: 1.5rem;
+  }
+
+  .weather-summary span {
+    margin-top: 1px;
+    font-size: 0.76rem;
+  }
+
+  .weather-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .weather-grid div {
+    border-radius: 11px;
+    padding: 8px 4px;
+  }
+
+  .weather-grid strong {
+    font-size: 0.98rem;
+  }
+
+  .weather-grid span {
+    margin-top: 3px;
+    font-size: 0.62rem;
+  }
+
+  .weather-meta,
+  .bus-meta {
+    gap: 4px;
+    margin-top: 7px;
+    font-size: 0.62rem;
+  }
+
+  .weather-meta span,
+  .weather-meta strong,
+  .bus-meta span,
+  .bus-meta strong {
+    padding: 4px 6px;
+  }
+
+  .recommendation {
+    gap: 7px;
+    margin-top: 8px;
+    border-radius: 12px;
+    padding: 9px;
+    font-size: 0.72rem;
+  }
+
+  .recommendation svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .recommendation span {
+    font-size: 0.62rem;
+  }
+
+  .bus-panel {
+    grid-column: 1 / -1;
+  }
+
+  .bus-panel .panel-header {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .stop-inline {
+    justify-self: center;
+    max-width: 100%;
+    gap: 5px;
+    border-radius: 12px;
+    padding: 7px 8px;
+  }
+
+  .stop-inline svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .stop-inline strong {
+    overflow: hidden;
+    font-size: 0.74rem;
+    text-overflow: ellipsis;
+  }
+
+  .stop-inline span {
+    overflow: hidden;
+    font-size: 0.68rem;
+    text-overflow: ellipsis;
+  }
+
+  .bus-actions {
+    gap: 4px;
+  }
+
+  .refresh-button {
+    width: 28px;
+    height: 28px;
+  }
+
+  .refresh-button svg,
+  .text-button svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .text-button {
+    gap: 3px;
+    font-size: 0.72rem;
+  }
+
+  .arrival-list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .arrival-card {
+    min-height: 72px;
+    gap: 7px;
+    border-radius: 12px;
+    padding: 8px;
+  }
+
+  .route-badge {
+    gap: 4px;
+    padding: 6px 7px;
+    font-size: 0.72rem;
+  }
+
+  .route-badge svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .arrival-card div:last-child strong {
+    font-size: 0.74rem;
+  }
+
+  .arrival-card span {
+    font-size: 0.66rem;
+  }
+}
+
+@media (max-width: 390px), (max-height: 760px) and (max-width: 560px) {
+  .app-shell {
+    padding: 8px 6px 10px;
+  }
+
+  .app-header {
+    margin-bottom: 7px;
+  }
+
+  .dashboard-grid {
+    gap: 6px;
+  }
+
+  .hero-panel,
+  .panel {
+    border-radius: 14px;
+  }
+
+  .hero-panel,
+  .panel {
+    padding: 10px;
+  }
+
+  .hero-content h1 {
+    font-size: clamp(1.52rem, 10vw, 2.25rem);
+  }
+
+  .hero-content p,
+  .departure-progress-card p {
+    font-size: 0.64rem;
+  }
+
+  .todo-item {
+    min-height: 31px;
+    padding: 5px 6px;
+  }
+
+  .arrival-card {
+    min-height: 64px;
+  }
+
+  .recommendation {
+    margin-top: 6px;
+    padding: 7px;
+  }
+
+  .weather-grid div {
+    padding-block: 6px;
+  }
+}
